@@ -1,5 +1,5 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
-<polymer-element name="ol2-map">
+<polymer-element name="ol2-map" attributes="defaultControls lon lat x y zoom">
     <template>
         <link rel="stylesheet" href="assets/theme/default/style.css">
         <style>
@@ -93,7 +93,28 @@
                     }
                 }
 
-                this.map.zoomToMaxExtent();
+                if (this.getAttribute("zoom") != null)
+                {
+                    if (this.getAttribute("lon") != null && this.getAttribute("lat") != null) {
+                        var lonlat = new OpenLayers.LonLat(parseFloat(this.getAttribute("lon")),
+                                                           parseFloat(this.getAttribute("lat")));
+                        var srcProj = new OpenLayers.Projection("EPSG:4326");
+                        var dstProj = this.map.getProjectionObject();
+                        lonlat.transform(srcProj, dstProj);
+                        this.map.moveTo(
+                            lonlat,
+                            parseFloat(this.getAttribute("zoom")));
+                    } else if (this.getAttribute("x") != null && this.getAttribute("y") != null) {
+                        this.map.moveTo(
+                            new OpenLayers.LonLat(parseFloat(this.getAttribute("x")),
+                                                  parseFloat(this.getAttribute("y"))),
+                            parseFloat(this.getAttribute("zoom")));
+                    } else {
+                        this.map.zoomToMaxExtent();
+                    }
+                } else {
+                    this.map.zoomToMaxExtent();
+                }
             }
         });
     </script>
