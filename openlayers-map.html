@@ -1,0 +1,115 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<polymer-element name="ol2-map">
+    <template>
+        <link rel="stylesheet" href="assets/theme/default/style.css">
+        <style>
+            :host {
+                display: block;
+            }
+            #map {
+                height: 100%;
+            }
+        </style>
+        <div id="map"></div>
+    </template>
+    <script>
+        Polymer('ol2-map', {
+            ready: function() {
+                if (this.getAttribute("defaultControls") == "false")
+                    this.map = new OpenLayers.Map(this.$.map, { theme: null, controls: [] });
+                else
+                    this.map = new OpenLayers.Map(this.$.map, { theme: null });
+                for (var i = 0; i < this.children.length; i++) {
+
+                    var currentNode = this.children[i];
+                    var nodeName = currentNode.localName;
+                    var type = currentNode.getAttribute("type");
+
+                    var optSetNodes = currentNode.getElementsByTagName("ol2-options");
+                    var layerOptions = null;
+                    var layerParams = null;
+                    var controlOptions = null;
+
+                    for (var j = 0; j < optSetNodes.length; j++) {
+                        var optSetNode = optSetNodes[j];
+                        var opts = {};
+                        var kvpNodes = optSetNode.getElementsByTagName("ol2-option");
+                        for (var k = 0; k < kvpNodes.length; k++) {
+                            var n = kvpNodes[k].getAttribute("name");
+                            var v = kvpNodes[k].getAttribute("value");
+                            opts[n] = v;
+                        }
+                        var optTypes = optSetNode.getAttribute("type");
+                        switch(optTypes)
+                        {
+                            case "layer":
+                                layerOptions = opts;
+                                break;
+                            case "params":
+                                layerParams = opts;
+                                break;
+                            case "control":
+                                controlOptions = opts;
+                                break;
+                        }
+                    }
+
+                    switch(nodeName) {
+                        case "ol2-layer":
+                            {
+                                var name = currentNode.getAttribute("name");
+                                if (layerOptions != null) {
+                                    var layer = new OpenLayers.Layer[type](name, layerOptions);
+                                    this.map.addLayer(layer);
+                                } else {
+                                    var layer = new OpenLayers.Layer[type](name);
+                                    this.map.addLayer(layer);
+                                }
+                            }
+                            break;
+                        case "ol2-grid-layer":
+                            {
+                                var name = currentNode.getAttribute("name");
+                                var url = this.children[i].getAttribute("url");
+                                if (layerOptions != null) {
+                                    var layer = new OpenLayers.Layer[type](name, url, layerOptions);
+                                    this.map.addLayer(layer);
+                                } else {
+                                    var layer = new OpenLayers.Layer[type](name, url);
+                                    this.map.addLayer(layer);
+                                }
+                            }
+                            break;
+                        case "ol2-control":
+                            {
+                                if (controlOptions != null) {
+                                    var control = new OpenLayers.Control[type](controlOptions);
+                                    this.map.addControl(control);
+                                } else {
+                                    var control = new OpenLayers.Control[type]();
+                                    this.map.addControl(control);
+                                }
+                            }
+                    }
+                }
+
+                this.map.zoomToMaxExtent();
+            }
+        });
+    </script>
+</polymer-element>
+<polymer-element name="ol2-layer" attributes="type name" noscript>
+
+</polymer-element>
+<polymer-element name="ol2-grid-layer" attributes="type name url" noscript>
+
+</polymer-element>
+<polymer-element name="ol2-options" attributes="type" noscript>
+
+</polymer-element>
+<polymer-element name="ol2-option" attributes="name value" noscript>
+
+</polymer-element>
+<polymer-element name="ol2-control" attributes="type" noscript>
+
+</polymer-element>

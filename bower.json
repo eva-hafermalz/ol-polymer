@@ -1,0 +1,16 @@
+{
+  "name": "olpolymer",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jumpinjackie/ol-polymer",
+  "authors": [
+    "Jackie Ng <jumpinjackie@gmail.com>"
+  ],
+  "keywords": [
+    "openlayers"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "polymer": "~0.3.3"
+  }
+}

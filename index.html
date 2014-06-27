@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OpenLayers Polymer Test</title>
+        <script src="bower_components/platform/platform.js"></script>
+        <script src="assets/OpenLayers.js"></script>
+        <link rel="import" href="openlayers-map.html">
+        <style>
+            ol2-map {
+              height: 400px;
+              width: 400px;
+              background: red;
+            }
+        </style>
+    </head>
+    <body>
+        <ol2-map defaultControls="false">
+            <ol2-layer type="OSM" name="OpenStreetMap"></ol2-layer>
+            <ol2-grid-layer type="XYZ" name="OpenCycleMap" url="http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png">
+                <ol2-options type="layer">
+                    <ol2-option name="sphericalMercator" value="true" />
+                </ol2-options>
+            </ol2-grid-layer>
+            <ol2-control type="Zoom"></ol2-control>
+            <ol2-control type="Navigation"></ol2-control>
+            <ol2-control type="LayerSwitcher"></ol2-control>
+        </ol2-map>
+    </body>
+</html>
